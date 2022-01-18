@@ -34,8 +34,8 @@ object Lib {
 
   object Android {
     private const val MATERIAL_DESIGN_VERSION = "1.4.0"
-    const val COMPOSE_VERSION = "1.1.0-rc01"
-    const val COMPOSE_COMPILER = "1.1.0-rc02"
+    const val COMPOSE_VERSION = "1.2.0-alpha01"
+    const val COMPOSE_COMPILER = "1.2.0-alpha01"
 
     const val ACT_COMPOSE = "androidx.activity:activity-compose:1.4.0"
 
