@@ -5,25 +5,21 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
 sealed class Screen(
-  private val baseRoute: String,
+  baseRoute: String,
   val navArguments: List<NamedNavArgument> = emptyList()
 ) {
   val route: String = baseRoute.appendArguments(navArguments)
 
-  object Auth :
-    Screen("auth")
+  object CalendarYearRoute :
+    Screen("yearView")
 
-  object ForgotPassword : Screen("forgotPassword")
-
-  object Jokes :
-    Screen("jokes")
-
-  object JokeDetail : Screen(
-    baseRoute = "jokeDetail",
-    navArguments = listOf(navArgument("jokeId") { type = NavType.LongType })
-  ) {
-    fun createRoute(jokeId: String) =
-      route.replace("{${navArguments.first().name}}", jokeId)
+  object CalendarMonthRoute :
+    Screen(
+      "monthView",
+      navArguments = listOf(navArgument("date") { type = NavType.LongType })
+    ) {
+    fun createRoute(date: Long) =
+      route.replace("{${navArguments.first().name}}","$date")
   }
 }
 

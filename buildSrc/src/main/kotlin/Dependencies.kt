@@ -43,6 +43,7 @@ object Lib {
 
     const val COMPOSE_UI = "androidx.compose.ui:ui:${COMPOSE_VERSION}"
     const val COIL_COMPOSE = "io.coil-kt:coil-compose:1.4.0"
+    const val COMPOSE_PAGING = "androidx.paging:paging-compose:1.0.0-alpha14"
     const val livedata = "androidx.compose.runtime:runtime-livedata:$COMPOSE_VERSION"
     const val COMPOSE_MATERIAL = "androidx.compose.material:material:${COMPOSE_VERSION}"
     const val COMPOSE_TOOLING = "androidx.compose.ui:ui-tooling-preview:${COMPOSE_VERSION}"

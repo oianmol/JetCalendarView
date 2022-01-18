@@ -1,15 +1,17 @@
 package com.mutualmobile.praxis.commonui.material
 
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.mutualmobile.praxis.commonui.theme.PraxisSurface
 import com.mutualmobile.praxis.commonui.theme.PraxisTheme
 
 @Composable
-fun CommonTopAppBar(titleText:String){
+fun CommonTopAppBar(
+  title: @Composable () -> Unit,
+  actions: @Composable RowScope.() -> Unit = {},
+  ) {
   PraxisSurface(
     color = PraxisTheme.colors.uiBackground,
     contentColor = PraxisTheme.colors.accent,
@@ -17,11 +19,10 @@ fun CommonTopAppBar(titleText:String){
   ) {
     TopAppBar(
       title = {
-        Text(
-          text = titleText,
-          color = PraxisTheme.colors.textPrimary,
-          textAlign = TextAlign.Start,
-        )
+        title()
+      },
+      actions = {
+        actions()
       },
       backgroundColor = PraxisTheme.colors.uiBackground,
     )

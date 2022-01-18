@@ -8,15 +8,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
-import com.mutualmobile.feat.jokes.ui.home.Dashboard
-import com.mutualmobile.feat.jokes.ui.home.JokeDetailsScreen
 import com.mutualmobile.praxis.commonui.theme.AlphaNearOpaque
 import com.mutualmobile.praxis.commonui.theme.PraxisSurface
 import com.mutualmobile.praxis.commonui.theme.PraxisTheme
 import com.mutualmobile.praxis.navigator.Navigator
 import com.mutualmobile.praxis.navigator.Screen
-import com.praxis.feat.authentication.ui.ForgotPasswordUI
-import com.praxis.feat.authentication.ui.AuthenticationUI
+import com.praxis.feat.calendarview.ui.CalendarMonthView
+import com.praxis.feat.calendarview.ui.CalendarYearView
 
 @Composable
 fun PraxisNavigation(navigator: Navigator) {
@@ -33,21 +31,15 @@ fun PraxisNavigation(navigator: Navigator) {
 
       NavHost(
         navController = navController,
-        startDestination = Screen.Auth.route
+        startDestination = Screen.CalendarYearRoute.route
       ) {
-        composable(Screen.Auth.route) {
-          AuthenticationUI()
+        composable(Screen.CalendarYearRoute.route) {
+          CalendarYearView()
         }
-        composable(Screen.ForgotPassword.route) {
-          ForgotPasswordUI()
-        }
-        composable(Screen.Jokes.route) {
-          Dashboard()
-        }
-        composable(Screen.JokeDetail.route,
-          arguments = Screen.JokeDetail.navArguments
+        composable(
+          Screen.CalendarMonthRoute.route, arguments = Screen.CalendarMonthRoute.navArguments
         ) {
-          JokeDetailsScreen()
+          CalendarMonthView()
         }
       }
     }
