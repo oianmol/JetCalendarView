@@ -6,7 +6,8 @@ This project is a wip. Please raise issues if you find any, thanks!
 
 Hit Refresh! Calendar view ❤️ Jetpack Compose
 
-<img src="art/art1.png" />
+<img src="art/art1.png" alt="drawing" style="width:300px;" />
+<img src="art/art2.png" alt="drawing" style="width:300px;" />
 
 
 License
