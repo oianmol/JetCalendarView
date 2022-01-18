@@ -8,6 +8,21 @@ import java.time.format.TextStyle
 import java.time.temporal.TemporalAdjusters
 import java.util.*
 
+
+fun dayNames(dayOfWeek: DayOfWeek): List<String> {
+  val days = mutableListOf<DayOfWeek>()
+  days.add(dayOfWeek)
+  while (days.size != 7) {
+    days.add(days.last().plus(1))
+  }
+  return days.map {
+    it.getDisplayName(
+      TextStyle.NARROW,
+      Locale.getDefault()
+    )
+  }
+}
+
 @Parcelize
 class JetWeek private constructor(
   val startDate: LocalDate,
@@ -17,19 +32,6 @@ class JetWeek private constructor(
   val isFirstWeek: Boolean,
   var days: List<JetDay>? = null
 ) : Parcelable, JetCalendarType() {
-  fun dayNames(viewType: JetViewType): List<String> {
-    val days = mutableListOf<DayOfWeek>()
-    days.add(dayOfWeek)
-    while (days.size != 7) {
-      days.add(days.last().plus(1))
-    }
-    return days.map {
-      it.getDisplayName(
-        if (viewType == JetViewType.YEARLY) java.time.format.TextStyle.NARROW else TextStyle.SHORT,
-        Locale.getDefault()
-      )
-    }
-  }
 
   companion object {
     fun current(

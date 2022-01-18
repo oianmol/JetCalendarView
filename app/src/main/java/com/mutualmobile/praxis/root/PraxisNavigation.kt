@@ -13,7 +13,7 @@ import com.mutualmobile.praxis.commonui.theme.PraxisSurface
 import com.mutualmobile.praxis.commonui.theme.PraxisTheme
 import com.mutualmobile.praxis.navigator.Navigator
 import com.mutualmobile.praxis.navigator.Screen
-import com.praxis.feat.calendarview.ui.CalendarMonthView
+import com.praxis.feat.calendarview.ui.CalendarMonthlyView
 import com.praxis.feat.calendarview.ui.CalendarYearView
 
 @Composable
@@ -39,7 +39,7 @@ fun PraxisNavigation(navigator: Navigator) {
         composable(
           Screen.CalendarMonthRoute.route, arguments = Screen.CalendarMonthRoute.navArguments
         ) {
-          CalendarMonthView()
+          CalendarMonthlyView()
         }
       }
     }

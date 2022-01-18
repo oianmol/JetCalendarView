@@ -27,6 +27,10 @@ class JetMonth private constructor(
     )
   }
 
+  fun monthYear(): String {
+    return name()+" "+year()
+  }
+
   fun year(): String {
     return startDate.year.toString()
   }

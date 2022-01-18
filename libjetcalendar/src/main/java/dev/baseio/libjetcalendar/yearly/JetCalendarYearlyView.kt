@@ -1,6 +1,7 @@
 package dev.baseio.libjetcalendar.yearly
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.CircularProgressIndicator
@@ -10,14 +11,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.*
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.mutualmobile.praxis.commonui.theme.AlphaNearTransparent
+import com.mutualmobile.praxis.commonui.theme.PraxisTheme
 import dev.baseio.libjetcalendar.data.*
 import dev.baseio.libjetcalendar.monthly.JetCalendarMonthlyView
+import dev.baseio.libjetcalendar.monthly.WeekNames
 import kotlinx.coroutines.flow.Flow
+import java.time.DayOfWeek
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -25,8 +31,11 @@ fun JetCalendarYearlyView(
   startingYear: JetYear,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
-  pagingFlow: Flow<PagingData<JetMonth>>
-) {
+  pagingFlow: Flow<PagingData<JetMonth>>,
+  isGridView: Boolean = true,
+  dayOfWeek: DayOfWeek,
+
+  ) {
   val lazyPagingMonths = pagingFlow.collectAsLazyPagingItems()
   // affected by https://stackoverflow.com/questions/69739108/how-to-save-paging-state-of-lazycolumn-during-navigation-in-jetpack-compose
   val listState = rememberLazyListState(startingYear.currentMonthPosition())
@@ -36,6 +45,8 @@ fun JetCalendarYearlyView(
     lazyPagingMonths,
     onDateSelected,
     selectedDates,
+    isGridView,
+    dayOfWeek = dayOfWeek
   )
 }
 
@@ -47,38 +58,130 @@ private fun YearViewInternal(
   pagedMonths: LazyPagingItems<JetMonth>,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
+  isGridView: Boolean,
+  dayOfWeek: DayOfWeek,
 ) {
   when (pagedMonths.itemCount) {
     0 -> CircularProgressIndicator(color = Color.Black, modifier = Modifier.padding(8.dp))
     else -> {
-      LazyVerticalGrid(
-        cells = GridCells.Fixed(3),
-        state = listState,
-        modifier = Modifier
-          .fillMaxWidth()
-          .fillMaxHeight()
-      ) {
-        for (index in 0 until pagedMonths.itemCount) {
-          when {
-            index % 12 == 0 -> {
-              item(span = { GridItemSpan(3) }) {
-                YearHeader(pagedMonths, index)
-              }
-              item {
-                CalendarMonthlyBox(pagedMonths, index, onDateSelected, selectedDates)
-              }
-            }
-            else -> {
-              item {
-                CalendarMonthlyBox(pagedMonths, index, onDateSelected, selectedDates)
-              }
-            }
+      if (isGridView) {
+        GridViewYearly(listState, pagedMonths, onDateSelected, selectedDates, isGridView, dayOfWeek)
+      } else {
+        Column() {
+          if(!isGridView){
+            WeekNames(isGridView, dayOfWeek = dayOfWeek)
           }
+          ListViewYearly(listState, pagedMonths, onDateSelected, selectedDates, isGridView, dayOfWeek)
         }
       }
     }
   }
 
+}
+
+@ExperimentalFoundationApi
+@Composable
+private fun ListViewYearly(
+  listState: LazyListState,
+  pagedMonths: LazyPagingItems<JetMonth>,
+  onDateSelected: (JetDay) -> Unit,
+  selectedDates: Set<JetDay>,
+  isGridView: Boolean,
+  dayOfWeek: DayOfWeek
+) {
+  LazyColumn(
+    state = listState,
+    modifier = Modifier
+      .fillMaxWidth()
+      .fillMaxHeight()
+  ) {
+    for (index in 0 until pagedMonths.itemCount) {
+      item {
+        CalendarMonthlyBox(
+          pagedMonths,
+          index,
+          onDateSelected,
+          selectedDates,
+          isGridView,
+          dayOfWeek = dayOfWeek
+        )
+      }
+    }
+  }
+}
+
+@ExperimentalFoundationApi
+@Composable
+private fun GridViewYearly(
+  listState: LazyListState,
+  pagedMonths: LazyPagingItems<JetMonth>,
+  onDateSelected: (JetDay) -> Unit,
+  selectedDates: Set<JetDay>,
+  isGridView: Boolean,
+  dayOfWeek: DayOfWeek,
+) {
+  LazyVerticalGrid(
+    cells = GridCells.Fixed(3),
+    state = listState,
+    modifier = Modifier
+      .fillMaxWidth()
+      .fillMaxHeight()
+  ) {
+    for (index in 0 until pagedMonths.itemCount) {
+      when {
+        index % 12 == 0 -> {
+          item(span = { GridItemSpan(3) }) {
+            YearHeader(pagedMonths, index)
+          }
+          item {
+            CalendarMonthlyBox(
+              pagedMonths,
+              index,
+              onDateSelected,
+              selectedDates,
+              isGridView,
+              dayOfWeek
+            )
+          }
+        }
+        else -> {
+          item {
+            CalendarMonthlyBox(
+              pagedMonths,
+              index,
+              onDateSelected,
+              selectedDates,
+              isGridView,
+              dayOfWeek
+            )
+          }
+        }
+      }
+    }
+  }
+}
+
+@Composable
+private fun YearMonthHeader(
+  pagedMonths: LazyPagingItems<JetMonth>,
+  index: Int
+) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .background(color = Color.White.copy(alpha = AlphaNearTransparent))
+  ) {
+    Text(
+      text = pagedMonths[index]!!.monthYear(),
+      modifier = Modifier.padding(8.dp),
+      textAlign = TextAlign.Center,
+      style = TextStyle(
+        color = PraxisTheme.colors.textPrimary,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.SemiBold
+      ),
+    )
+  }
 }
 
 @Composable
@@ -103,8 +206,14 @@ private fun CalendarMonthlyBox(
   index: Int,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
+  isGridView: Boolean,
+  dayOfWeek: DayOfWeek,
 ) {
-  JetCalendarMonthlyView(pagedMonths[index]!!,{
-    onDateSelected(it)
-  }, selectedDates, false, viewType = JetViewType.YEARLY)
+  JetCalendarMonthlyView(
+    pagedMonths[index]!!,
+    {
+      onDateSelected(it)
+    },
+    selectedDates, false, isGridView = isGridView, dayOfWeek = dayOfWeek
+  )
 }

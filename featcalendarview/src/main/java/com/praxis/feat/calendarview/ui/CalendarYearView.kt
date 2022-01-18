@@ -58,7 +58,8 @@ fun CalendarYearView(VM: CalendarYearVM = hiltViewModel()) {
         updateViewForViewType(VM, startOfMonth.toJetDay(true))
       },
       selectedDates = setOf(JetDay(LocalDate.now(), isPartOfMonth = true)),
-      pagingFlow = VM.lazyPagingMonths
+      pagingFlow = VM.lazyPagingMonths,
+      dayOfWeek =  VM.firstDayOfWeek
     )
   }
 

@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CalendarYearVM @Inject constructor(private val navigator: Navigator) : ViewModel() {
   var selectedDate = JetDay(LocalDate.now(), isPartOfMonth = true)
-  private val firstDayOfWeek: DayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
+  val firstDayOfWeek: DayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
   val year = JetYear.current(selectedDate.date, firstDayOfWeek)
 
   private val monthsPager = Pager(PagingConfig(12, initialLoadSize = 3)) {

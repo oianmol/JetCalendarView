@@ -1,13 +1,8 @@
 package dev.baseio.libjetcalendar.monthly
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.baseio.libjetcalendar.data.*
 import dev.baseio.libjetcalendar.weekly.JetCalendarWeekView
+import java.time.DayOfWeek
 
 @Composable
 fun JetCalendarMonthlyView(
@@ -25,7 +21,8 @@ fun JetCalendarMonthlyView(
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
   showWeekView: Boolean = true,
-  viewType: JetViewType
+  isGridView: Boolean,
+  dayOfWeek: DayOfWeek
 ) {
   Column(
     modifier = Modifier
@@ -37,7 +34,7 @@ fun JetCalendarMonthlyView(
     Text(
       text = jetMonth.name(),
       style = TextStyle(
-        fontSize = 16.sp,
+        fontSize = if(isGridView) 16.sp else 18.sp,
         fontWeight = FontWeight.Medium,
         color = colorCurrentMonthSelected(selectedDates, jetMonth)
       ),
@@ -46,14 +43,14 @@ fun JetCalendarMonthlyView(
     jetMonth.monthWeeks?.forEach { week ->
       Column {
         if (week.isFirstWeek && showWeekView) {
-          WeekNames(week, viewType)
+          WeekNames(isGridView, dayOfWeek = dayOfWeek)
         }
         JetCalendarWeekView(
           modifier = Modifier.fillMaxWidth(),
           week = week,
           onDateSelected = onDateSelected,
           selectedDates = selectedDates,
-          viewType
+          isGridView
         )
       }
     }
@@ -72,41 +69,15 @@ private fun isSameMonth(
 ) =
   jetMonth.endDate.monthValue == selectedDates.first().date.monthValue && jetMonth.endDate.year == selectedDates.first().date.year
 
-@Composable
-private fun NextButton(onNext: () -> Unit) {
-  IconButton(onClick = {
-    onNext()
-  }) {
-    Icon(
-      Icons.Filled.ArrowForward,
-      "next",
-      tint = Color.Black
-    )
-  }
-}
 
 @Composable
-private fun PrevButton(onPrevious: () -> Unit) {
-  IconButton(onClick = {
-    onPrevious()
-
-  }) {
-    Icon(
-      Icons.Filled.ArrowBack,
-      "previous",
-      tint = Color.Black
-    )
-  }
-}
-
-@Composable
-fun WeekNames(week: JetWeek, viewType: JetViewType) {
+fun WeekNames(isGridView: Boolean, dayOfWeek: DayOfWeek) {
   Row(
-    modifier = Modifier.fillMaxWidth(),
+    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween
   ) {
-    week.dayNames(viewType).forEach {
+    dayNames(dayOfWeek = dayOfWeek).forEach {
       Box(
         modifier = Modifier
           .padding(2.dp),
@@ -115,7 +86,7 @@ fun WeekNames(week: JetWeek, viewType: JetViewType) {
         Text(
           text = it, modifier = Modifier.padding(2.dp),
           style = TextStyle(
-            fontSize = if (viewType == JetViewType.YEARLY) 8.sp else 12.sp,
+            fontSize = if (isGridView) 8.sp else 12.sp,
             fontWeight = FontWeight.Bold
           )
         )
