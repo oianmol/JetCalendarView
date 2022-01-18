@@ -17,10 +17,6 @@ class JetYear private constructor(
   var yearMonths: List<JetMonth>? = null
 ) : Parcelable, JetCalendarType() {
 
-  fun currentMonthPosition(): Int {
-    return YearMonth.now().monthValue - 1
-  }
-
   companion object {
     fun current(date: LocalDate = LocalDate.now(), firstDayOfWeek: DayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek): JetYear {
       val day: LocalDate = date.with(TemporalAdjusters.firstDayOfYear())

@@ -57,14 +57,13 @@ private fun AppBarTitle(viewModel: CalendarMonthVM) {
 @Composable
 private fun MainContent(viewModel: CalendarMonthVM) {
   JetCalendarYearlyView(
-    startingYear = viewModel.year,
     onDateSelected = {
 
     },
     selectedDates = setOf(JetDay(LocalDate.now(), isPartOfMonth = true)),
     pagingFlow = viewModel.lazyPagingMonths,
     isGridView = false,
-    dayOfWeek = viewModel.firstDayOfWeek
+    dayOfWeek = viewModel.firstDayOfWeek,
   )
 }
 

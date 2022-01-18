@@ -23,13 +23,10 @@ class CalendarMonthVM @Inject constructor(
   savedStateHandle: SavedStateHandle,
   private val navigator: Navigator
 ) : ViewModel() {
-  fun navBack() {
-    navigator.navigateUp()
-  }
 
   private val monthDate =
     savedStateHandle.get<Long>(Screen.CalendarMonthRoute.navArguments.first().name)!!
-  private val selectedDate: LocalDate = LocalDate.ofEpochDay(monthDate)
+  val selectedDate: LocalDate = LocalDate.ofEpochDay(monthDate)
   val titleText = selectedDate.year.toString()
 
   val firstDayOfWeek: DayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
@@ -39,5 +36,9 @@ class CalendarMonthVM @Inject constructor(
     JetPagingSource(selectedDate, firstDayOfWeek)
   }
   val lazyPagingMonths = monthsPager.flow
+
+  fun navBack() {
+    navigator.navigateUp()
+  }
 
 }

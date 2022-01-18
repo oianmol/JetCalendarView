@@ -1,6 +1,8 @@
 package dev.baseio.libjetcalendar.monthly
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,9 +22,7 @@ fun JetCalendarMonthlyView(
   jetMonth: JetMonth,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
-  showWeekView: Boolean = true,
-  isGridView: Boolean,
-  dayOfWeek: DayOfWeek
+  isGridView: Boolean
 ) {
   Column(
     modifier = Modifier
@@ -31,35 +31,44 @@ fun JetCalendarMonthlyView(
       .padding(4.dp),
     verticalArrangement = Arrangement.SpaceAround,
   ) {
-    Text(
-      text = jetMonth.name(),
-      style = TextStyle(
-        fontSize = if(isGridView) 16.sp else 18.sp,
-        fontWeight = FontWeight.Medium,
-        color = colorCurrentMonthSelected(selectedDates, jetMonth)
-      ),
-      modifier = Modifier.padding(8.dp)
-    )
-    jetMonth.monthWeeks?.forEach { week ->
-      Column {
-        if (week.isFirstWeek && showWeekView) {
-          WeekNames(isGridView, dayOfWeek = dayOfWeek)
-        }
-        JetCalendarWeekView(
-          modifier = Modifier.fillMaxWidth(),
-          week = week,
-          onDateSelected = onDateSelected,
-          selectedDates = selectedDates,
-          isGridView
-        )
-      }
+    MonthName(jetMonth, isGridView, selectedDates)
+    jetMonth.monthWeeks!!.forEach { week ->
+      JetCalendarWeekView(
+        modifier = Modifier.fillMaxWidth(),
+        week = week,
+        onDateSelected = onDateSelected,
+        selectedDates = selectedDates,
+        isGridView
+      )
     }
+
   }
 }
 
 @Composable
+private fun MonthName(
+  jetMonth: JetMonth,
+  isGridView: Boolean,
+  selectedDates: Set<JetDay>
+) {
+  Text(
+    text = jetMonth.name(),
+    style = TextStyle(
+      fontSize = if (isGridView) 16.sp else 18.sp,
+      fontWeight = FontWeight.Medium,
+      color = colorCurrentMonthSelected(selectedDates, jetMonth)
+    ),
+    modifier = Modifier.padding(8.dp)
+  )
+}
+
+@Composable
 fun colorCurrentMonthSelected(selectedDates: Set<JetDay>, jetMonth: JetMonth): Color {
-  return if (isSameMonth(jetMonth, selectedDates)) Color.Red else MaterialTheme.typography.body1.color
+  return if (isSameMonth(
+      jetMonth,
+      selectedDates
+    )
+  ) Color.Red else MaterialTheme.typography.body1.color
 }
 
 @Composable
@@ -73,7 +82,9 @@ private fun isSameMonth(
 @Composable
 fun WeekNames(isGridView: Boolean, dayOfWeek: DayOfWeek) {
   Row(
-    modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp),
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(start = 16.dp, end = 16.dp),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween
   ) {

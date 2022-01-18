@@ -52,7 +52,6 @@ fun CalendarYearView(VM: CalendarYearVM = hiltViewModel()) {
       })
     }) {
     JetCalendarYearlyView(
-      startingYear = VM.year,
       onDateSelected = {
         val startOfMonth = it.date.with(TemporalAdjusters.firstDayOfMonth())
         updateViewForViewType(VM, startOfMonth.toJetDay(true))

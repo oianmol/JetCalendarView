@@ -28,17 +28,16 @@ import java.time.DayOfWeek
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun JetCalendarYearlyView(
-  startingYear: JetYear,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
   pagingFlow: Flow<PagingData<JetMonth>>,
   isGridView: Boolean = true,
   dayOfWeek: DayOfWeek,
-
-  ) {
+  startIndex: Int = 0
+) {
   val lazyPagingMonths = pagingFlow.collectAsLazyPagingItems()
   // affected by https://stackoverflow.com/questions/69739108/how-to-save-paging-state-of-lazycolumn-during-navigation-in-jetpack-compose
-  val listState = rememberLazyListState(startingYear.currentMonthPosition())
+  val listState = rememberLazyListState(startIndex)
 
   YearViewInternal(
     listState,
@@ -65,13 +64,13 @@ private fun YearViewInternal(
     0 -> CircularProgressIndicator(color = Color.Black, modifier = Modifier.padding(8.dp))
     else -> {
       if (isGridView) {
-        GridViewYearly(listState, pagedMonths, onDateSelected, selectedDates, isGridView, dayOfWeek)
+        GridViewYearly(listState, pagedMonths, onDateSelected, selectedDates, isGridView)
       } else {
-        Column() {
-          if(!isGridView){
+        Column {
+          if (!isGridView) {
             WeekNames(isGridView, dayOfWeek = dayOfWeek)
           }
-          ListViewYearly(listState, pagedMonths, onDateSelected, selectedDates, isGridView, dayOfWeek)
+          ListViewYearly(listState, pagedMonths, onDateSelected, selectedDates, isGridView)
         }
       }
     }
@@ -86,8 +85,7 @@ private fun ListViewYearly(
   pagedMonths: LazyPagingItems<JetMonth>,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
-  isGridView: Boolean,
-  dayOfWeek: DayOfWeek
+  isGridView: Boolean
 ) {
   LazyColumn(
     state = listState,
@@ -102,8 +100,7 @@ private fun ListViewYearly(
           index,
           onDateSelected,
           selectedDates,
-          isGridView,
-          dayOfWeek = dayOfWeek
+          isGridView
         )
       }
     }
@@ -118,7 +115,6 @@ private fun GridViewYearly(
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
   isGridView: Boolean,
-  dayOfWeek: DayOfWeek,
 ) {
   LazyVerticalGrid(
     cells = GridCells.Fixed(3),
@@ -139,8 +135,7 @@ private fun GridViewYearly(
               index,
               onDateSelected,
               selectedDates,
-              isGridView,
-              dayOfWeek
+              isGridView
             )
           }
         }
@@ -151,8 +146,7 @@ private fun GridViewYearly(
               index,
               onDateSelected,
               selectedDates,
-              isGridView,
-              dayOfWeek
+              isGridView
             )
           }
         }
@@ -207,13 +201,12 @@ private fun CalendarMonthlyBox(
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
   isGridView: Boolean,
-  dayOfWeek: DayOfWeek,
 ) {
   JetCalendarMonthlyView(
     pagedMonths[index]!!,
     {
       onDateSelected(it)
     },
-    selectedDates, false, isGridView = isGridView, dayOfWeek = dayOfWeek
+    selectedDates, isGridView = isGridView
   )
 }

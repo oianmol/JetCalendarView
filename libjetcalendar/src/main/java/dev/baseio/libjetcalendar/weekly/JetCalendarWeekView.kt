@@ -3,6 +3,8 @@ package dev.baseio.libjetcalendar.weekly
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -27,16 +29,17 @@ fun JetCalendarWeekView(
   selectedDates: Set<JetDay>,
   isGridView: Boolean,
 ) {
-  Row(
-    modifier = modifier.fillMaxWidth().padding(bottom = 8.dp),
+  LazyRow(
+    modifier = modifier
+      .fillMaxWidth()
+      .padding(bottom = 8.dp),
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.SpaceBetween
+    horizontalArrangement = Arrangement.SpaceBetween,
   ) {
-
-    week.days?.forEach { date ->
+    items(week.days!!) { date ->
       Box(
         modifier = Modifier
-          .size(if(!isGridView) 40.dp else 16.dp)
+          .size(if (!isGridView) 40.dp else 16.dp)
           .clip(CircleShape)
           .clickable {
             if (date.isPartOfMonth) {
@@ -49,7 +52,7 @@ fun JetCalendarWeekView(
         Text(
           text = date.date.dayOfMonth.toString(),
           style = TextStyle(
-            fontSize = if(isGridView) 8.sp else 14.sp,
+            fontSize = if (isGridView) 8.sp else 14.sp,
             fontWeight = FontWeight.SemiBold,
             color = if (date.isPartOfMonth) MaterialTheme.typography.body1.color else Color.Transparent
           )
