@@ -46,7 +46,7 @@ fun JetCalendarMonthlyView(
     jetMonth.monthWeeks?.forEach { week ->
       Column {
         if (week.isFirstWeek && showWeekView) {
-          WeekNames(week,viewType)
+          WeekNames(week, viewType)
         }
         JetCalendarWeekView(
           modifier = Modifier.fillMaxWidth(),
@@ -62,8 +62,15 @@ fun JetCalendarMonthlyView(
 
 @Composable
 fun colorCurrentMonthSelected(selectedDates: Set<JetDay>, jetMonth: JetMonth): Color {
-  return if (jetMonth.endDate.monthValue == selectedDates.first().date.monthValue) Color.Red else MaterialTheme.typography.body1.color
+  return if (isSameMonth(jetMonth, selectedDates)) Color.Red else MaterialTheme.typography.body1.color
 }
+
+@Composable
+private fun isSameMonth(
+  jetMonth: JetMonth,
+  selectedDates: Set<JetDay>
+) =
+  jetMonth.endDate.monthValue == selectedDates.first().date.monthValue && jetMonth.endDate.year == selectedDates.first().date.year
 
 @Composable
 private fun NextButton(onNext: () -> Unit) {
@@ -108,7 +115,8 @@ fun WeekNames(week: JetWeek, viewType: JetViewType) {
         Text(
           text = it, modifier = Modifier.padding(2.dp),
           style = TextStyle(
-            fontSize = if(viewType == JetViewType.YEARLY ) 8.sp else 12.sp, fontWeight = FontWeight.Bold
+            fontSize = if (viewType == JetViewType.YEARLY) 8.sp else 12.sp,
+            fontWeight = FontWeight.Bold
           )
         )
       }

@@ -1,7 +1,6 @@
 package dev.baseio.libjetcalendar.yearly
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.CircularProgressIndicator
@@ -63,7 +62,7 @@ private fun YearViewInternal(
           when {
             index % 12 == 0 -> {
               item(span = { GridItemSpan(3) }) {
-                MonthHeader(pagedMonths, index)
+                YearHeader(pagedMonths, index)
               }
               item {
                 CalendarMonthlyBox(pagedMonths, index, onDateSelected, selectedDates)
@@ -83,7 +82,7 @@ private fun YearViewInternal(
 }
 
 @Composable
-private fun MonthHeader(
+private fun YearHeader(
   pagedMonths: LazyPagingItems<JetMonth>,
   index: Int
 ) {
