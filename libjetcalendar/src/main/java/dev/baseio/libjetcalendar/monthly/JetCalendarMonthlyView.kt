@@ -31,7 +31,7 @@ fun JetCalendarMonthlyView(
     modifier = Modifier
       .fillMaxWidth()
       .wrapContentHeight()
-      .padding(8.dp),
+      .padding(4.dp),
     verticalArrangement = Arrangement.SpaceAround,
   ) {
     Text(

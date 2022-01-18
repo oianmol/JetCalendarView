@@ -29,7 +29,7 @@ fun JetCalendarWeekView(
   viewType: JetViewType,
 ) {
   Row(
-    modifier = modifier.fillMaxWidth(),
+    modifier = modifier.fillMaxWidth().padding(bottom = 8.dp),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween
   ) {
@@ -49,9 +49,8 @@ fun JetCalendarWeekView(
       ) {
         Text(
           text = date.date.dayOfMonth.toString(),
-          modifier = Modifier.padding(4.dp),
           style = TextStyle(
-            fontSize = if(viewType == JetViewType.YEARLY)  6.sp else 14.sp,
+            fontSize = if(viewType == JetViewType.YEARLY) 8.sp else 14.sp,
             color = if (date.isPartOfMonth) MaterialTheme.typography.body1.color else Color.Transparent
           )
         )

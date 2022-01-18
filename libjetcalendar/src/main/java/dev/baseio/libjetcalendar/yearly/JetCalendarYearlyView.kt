@@ -63,15 +63,7 @@ private fun YearViewInternal(
           when {
             index % 12 == 0 -> {
               item(span = { GridItemSpan(3) }) {
-                Text(
-                  text = pagedMonths[index]!!.year(),
-                  modifier = Modifier.padding(8.dp),
-                  style = TextStyle(
-                    color = Color.Red,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold
-                  )
-                )
+                MonthHeader(pagedMonths, index)
               }
               item {
                 CalendarMonthlyBox(pagedMonths, index, onDateSelected, selectedDates)
@@ -91,15 +83,29 @@ private fun YearViewInternal(
 }
 
 @Composable
+private fun MonthHeader(
+  pagedMonths: LazyPagingItems<JetMonth>,
+  index: Int
+) {
+  Text(
+    text = pagedMonths[index]!!.year(),
+    modifier = Modifier.padding(8.dp),
+    style = TextStyle(
+      color = Color.Red,
+      fontSize = 24.sp,
+      fontWeight = FontWeight.SemiBold
+    )
+  )
+}
+
+@Composable
 private fun CalendarMonthlyBox(
   pagedMonths: LazyPagingItems<JetMonth>,
   index: Int,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
 ) {
-  Box() {
-    JetCalendarMonthlyView(pagedMonths[index]!!,{
-      onDateSelected(it)
-    }, selectedDates, false, viewType = JetViewType.YEARLY)
-  }
+  JetCalendarMonthlyView(pagedMonths[index]!!,{
+    onDateSelected(it)
+  }, selectedDates, false, viewType = JetViewType.YEARLY)
 }
