@@ -30,8 +30,7 @@ class CalendarMonthVM @Inject constructor(
   val titleText = selectedDate.year.toString()
 
   val firstDayOfWeek: DayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
-  val year = JetYear.current(selectedDate, firstDayOfWeek)
-
+  val month = JetMonth.current(selectedDate, firstDayOfWeek)
   fun navBack() {
     navigator.navigateUp()
   }

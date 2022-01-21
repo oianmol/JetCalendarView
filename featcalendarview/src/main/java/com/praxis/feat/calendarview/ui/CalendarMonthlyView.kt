@@ -18,6 +18,7 @@ import com.mutualmobile.praxis.commonui.material.CommonTopAppBar
 import com.mutualmobile.praxis.commonui.theme.PraxisTheme
 import dev.baseio.libjetcalendar.data.JetDay
 import dev.baseio.libjetcalendar.data.toJetDay
+import dev.baseio.libjetcalendar.monthly.JetCalendarMonthlyView
 import dev.baseio.libjetcalendar.yearly.JetCalendarYearlyView
 import java.time.LocalDate
 
@@ -57,15 +58,11 @@ private fun AppBarTitle(viewModel: CalendarMonthVM) {
 
 @Composable
 private fun MainContent(viewModel: CalendarMonthVM) {
-  JetCalendarYearlyView(
-    onDateSelected = {
-
-    },
+  JetCalendarMonthlyView(
+    jetMonth = viewModel.month,
+    onDateSelected = {},
     selectedDates = setOf(viewModel.selectedDate.toJetDay(true)),
-    jetYear = viewModel.year,
-    isGridView = false,
-    dayOfWeek = viewModel.firstDayOfWeek,
-    startIndex = viewModel.selectedDate.monthValue.minus(1)
+    isGridView = false
   )
 }
 
