@@ -1,10 +1,15 @@
-# JetCalendar
-
-This project is a wip. Please raise issues if you find any, thanks!
-✅ To implement pagination for year view (Implemented but Doesn't work well with list states)
-🚧 customize and allow for styling
+# JetCalendarView
 
 Hit Refresh! Calendar view ❤️ Jetpack Compose
+
+This project is an experimental calendar view. Please raise issues if you find any, thanks!
+
+## Features
+
+- Year View (List and Grid View) with optional Navigation buttons
+- Month View with optional Navigation buttons
+- Modular and built with a week as a simplest view
+
 
 <img src="art/art1.png" alt="drawing" style="width:300px;" />
 <img src="art/art2.png" alt="drawing" style="width:300px;" />
