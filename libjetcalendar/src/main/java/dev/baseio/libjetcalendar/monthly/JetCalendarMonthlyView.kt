@@ -3,8 +3,13 @@ package dev.baseio.libjetcalendar.monthly
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +27,10 @@ fun JetCalendarMonthlyView(
   jetMonth: JetMonth,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
-  isGridView: Boolean
+  isGridView: Boolean,
+  needsMonthNavigator: Boolean = false,
+  onPreviousMonth: () -> Unit = {},
+  onNextMonth: () -> Unit = {}
 ) {
   Column(
     modifier = Modifier
@@ -31,7 +39,11 @@ fun JetCalendarMonthlyView(
       .padding(4.dp),
     verticalArrangement = Arrangement.SpaceAround,
   ) {
-    MonthName(jetMonth, isGridView, selectedDates)
+    if (needsMonthNavigator) {
+      MonthNavigator(onPreviousMonth, jetMonth, isGridView, selectedDates, onNextMonth)
+    } else {
+      MonthName(jetMonth, isGridView, selectedDates)
+    }
     jetMonth.monthWeeks.forEach { week ->
       JetCalendarWeekView(
         modifier = Modifier.fillMaxWidth(),
@@ -42,6 +54,39 @@ fun JetCalendarMonthlyView(
       )
     }
 
+  }
+}
+
+@Composable
+private fun MonthNavigator(
+  onPreviousMonth: () -> Unit,
+  jetMonth: JetMonth,
+  isGridView: Boolean,
+  selectedDates: Set<JetDay>,
+  onNextMonth: () -> Unit
+) {
+  Row(
+    horizontalArrangement = Arrangement.SpaceBetween,
+    modifier = Modifier.fillMaxWidth(),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    IconButton(onClick = {
+      onPreviousMonth()
+    }) {
+      Icon(
+        Icons.Filled.ArrowBack, "Previous Month",
+        tint = Color.Red
+      )
+    }
+    MonthName(jetMonth, isGridView, selectedDates)
+    IconButton(onClick = {
+      onNextMonth()
+    }) {
+      Icon(
+        Icons.Filled.ArrowForward, "Next Month",
+        tint = Color.Red
+      )
+    }
   }
 }
 

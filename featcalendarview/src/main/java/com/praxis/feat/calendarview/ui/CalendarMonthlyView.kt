@@ -67,7 +67,14 @@ private fun MainContent(viewModel: CalendarMonthVM) {
         viewModel.dateSelected(it.date)
       },
       selectedDates = setOf(viewModel.selectedDate.toJetDay(true)),
-      isGridView = false
+      isGridView = false,
+      onNextMonth = {
+        viewModel.nextMonth()
+      },
+      onPreviousMonth = {
+        viewModel.previousMonth()
+      },
+      needsMonthNavigator = true
     )
   }
 }

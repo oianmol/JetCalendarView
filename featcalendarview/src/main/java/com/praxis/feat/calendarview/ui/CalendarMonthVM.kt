@@ -30,7 +30,7 @@ class CalendarMonthVM @Inject constructor(
 
   private val monthDate =
     savedStateHandle.get<Long>(Screen.CalendarMonthRoute.navArguments.first().name)!!
-  val selectedDate: LocalDate = LocalDate.ofEpochDay(monthDate)
+  var selectedDate: LocalDate = LocalDate.ofEpochDay(monthDate)
   private val firstDayOfWeek: DayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
 
   var titleState = MutableStateFlow("")
@@ -42,11 +42,12 @@ class CalendarMonthVM @Inject constructor(
     dateSelected(selectedDate)
   }
 
-  fun dateSelected(selectedDate: LocalDate) {
+  fun dateSelected(date: LocalDate) {
     viewModelScope.launch {
-      titleState.value = selectedDate.year.toString()
+      selectedDate = date
+      titleState.value = date.year.toString()
       val monthCurrent = withContext(Dispatchers.Default) {
-        JetMonth.current(selectedDate, firstDayOfWeek)
+        JetMonth.current(date, firstDayOfWeek)
       }
       month.value = monthCurrent
     }
@@ -54,6 +55,14 @@ class CalendarMonthVM @Inject constructor(
 
   fun navBack() {
     navigator.navigateUp()
+  }
+
+  fun nextMonth() {
+    month.value?.endDate?.plusDays(1)?.let { dateSelected(it) }
+  }
+
+  fun previousMonth() {
+    month.value?.startDate?.minusDays(1)?.let { dateSelected(it) }
   }
 
 }
