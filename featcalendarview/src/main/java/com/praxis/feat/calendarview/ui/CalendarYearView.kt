@@ -3,8 +3,7 @@ package com.praxis.feat.calendarview.ui
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,6 +19,8 @@ import java.time.LocalDate
 
 @Composable
 fun CalendarYearView(viewModel: CalendarYearVM = hiltViewModel()) {
+  val viewType by viewModel.gridListSwitch.collectAsState()
+
   Scaffold(
     backgroundColor = PraxisTheme.colors.uiBackground,
     contentColor = PraxisTheme.colors.textSecondary,
@@ -29,23 +30,11 @@ fun CalendarYearView(viewModel: CalendarYearVM = hiltViewModel()) {
     topBar = {
       CommonTopAppBar(title = {
       }, actions = {
-        IconButton(modifier = Modifier.then(Modifier.padding(8.dp)),
+        TextButton(modifier = Modifier.then(Modifier.padding(8.dp)),
           onClick = {
+            viewModel.switchView()
           }, content = {
-            Icon(
-              Icons.Filled.Search,
-              "search",
-              tint = Color.Red
-            )
-          })
-        IconButton(modifier = Modifier.then(Modifier.padding(8.dp)),
-          onClick = {
-          }, content = {
-            Icon(
-              Icons.Filled.Add,
-              "add events",
-              tint = Color.Red
-            )
+            Text(text = if (viewType) "Grid" else "List")
           })
       })
     }) {
@@ -58,7 +47,7 @@ fun CalendarYearView(viewModel: CalendarYearVM = hiltViewModel()) {
         selectedDates = setOf(JetDay(LocalDate.now(), isPartOfMonth = true)),
         jetYear = jetYear,
         dayOfWeek = viewModel.firstDayOfWeek,
-        isGridView = false
+        isGridView = viewType
       )
     }
 

@@ -25,6 +25,8 @@ class CalendarYearVM @Inject constructor(private val navigator: Navigator) : Vie
 
   var yearState = MutableStateFlow<JetYear?>(null)
     private set
+  var gridListSwitch = MutableStateFlow(true)
+    private set
 
   init {
     setYear(LocalDate.now())
@@ -42,6 +44,10 @@ class CalendarYearVM @Inject constructor(private val navigator: Navigator) : Vie
 
   fun navigateMonth(jetDay: JetDay) {
     navigator.navigate(Screen.CalendarMonthRoute.createRoute(jetDay.date.toEpochDay()))
+  }
+
+  fun switchView() {
+    gridListSwitch.value = !gridListSwitch.value
   }
 
 }
