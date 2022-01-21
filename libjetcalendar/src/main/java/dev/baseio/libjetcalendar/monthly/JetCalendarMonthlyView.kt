@@ -32,7 +32,7 @@ fun JetCalendarMonthlyView(
     verticalArrangement = Arrangement.SpaceAround,
   ) {
     MonthName(jetMonth, isGridView, selectedDates)
-    jetMonth.monthWeeks!!.forEach { week ->
+    jetMonth.monthWeeks.forEach { week ->
       JetCalendarWeekView(
         modifier = Modifier.fillMaxWidth(),
         week = week,
@@ -75,8 +75,9 @@ fun colorCurrentMonthSelected(selectedDates: Set<JetDay>, jetMonth: JetMonth): C
 private fun isSameMonth(
   jetMonth: JetMonth,
   selectedDates: Set<JetDay>
-) =
-  jetMonth.endDate.monthValue == selectedDates.first().date.monthValue && jetMonth.endDate.year == selectedDates.first().date.year
+): Boolean {
+  return selectedDates.any { "${it.date.monthValue}${it.date.year}" == "${jetMonth.startDate.monthValue}${jetMonth.startDate.year}" }
+}
 
 
 @Composable

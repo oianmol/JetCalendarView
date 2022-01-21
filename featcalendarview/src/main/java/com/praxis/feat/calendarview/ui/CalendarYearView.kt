@@ -15,10 +15,8 @@ import com.google.accompanist.insets.statusBarsPadding
 import com.mutualmobile.praxis.commonui.material.CommonTopAppBar
 import com.mutualmobile.praxis.commonui.theme.PraxisTheme
 import dev.baseio.libjetcalendar.data.JetDay
-import dev.baseio.libjetcalendar.data.toJetDay
 import dev.baseio.libjetcalendar.yearly.JetCalendarYearlyView
 import java.time.LocalDate
-import java.time.temporal.TemporalAdjusters
 
 @Composable
 fun CalendarYearView(viewModel: CalendarYearVM = hiltViewModel()) {
@@ -51,14 +49,19 @@ fun CalendarYearView(viewModel: CalendarYearVM = hiltViewModel()) {
           })
       })
     }) {
-    JetCalendarYearlyView(
-      onDateSelected = {
-        updateViewForViewType(viewModel, it)
-      },
-      selectedDates = setOf(JetDay(LocalDate.now(), isPartOfMonth = true)),
-      jetYear = viewModel.year,
-      dayOfWeek =  viewModel.firstDayOfWeek
-    )
+    val yearState by viewModel.yearState.collectAsState()
+    yearState?.let { jetYear ->
+      JetCalendarYearlyView(
+        onDateSelected = {
+          updateViewForViewType(viewModel, it)
+        },
+        selectedDates = setOf(JetDay(LocalDate.now(), isPartOfMonth = true)),
+        jetYear = jetYear,
+        dayOfWeek = viewModel.firstDayOfWeek,
+        isGridView = false
+      )
+    }
+
   }
 
 
@@ -68,6 +71,5 @@ private fun updateViewForViewType(
   calendarYearVM: CalendarYearVM,
   jetDay: JetDay
 ) {
-  calendarYearVM.selectedDate = jetDay
-  calendarYearVM.navigateMonth()
+  calendarYearVM.navigateMonth(jetDay)
 }

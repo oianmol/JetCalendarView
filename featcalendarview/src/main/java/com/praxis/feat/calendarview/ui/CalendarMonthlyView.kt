@@ -50,20 +50,26 @@ fun CalendarMonthlyView(viewModel: CalendarMonthVM = hiltViewModel()) {
 
 @Composable
 private fun AppBarTitle(viewModel: CalendarMonthVM) {
+  val titleText by viewModel.titleState.collectAsState()
   Text(
-    text = viewModel.titleText,
+    text = titleText,
     style = MaterialTheme.typography.h6.copy(color = Color.Red)
   )
 }
 
 @Composable
 private fun MainContent(viewModel: CalendarMonthVM) {
-  JetCalendarMonthlyView(
-    jetMonth = viewModel.month,
-    onDateSelected = {},
-    selectedDates = setOf(viewModel.selectedDate.toJetDay(true)),
-    isGridView = false
-  )
+  val month by viewModel.month.collectAsState()
+  month?.let { jetMonth ->
+    JetCalendarMonthlyView(
+      jetMonth = jetMonth,
+      onDateSelected = {
+        viewModel.dateSelected(it.date)
+      },
+      selectedDates = setOf(viewModel.selectedDate.toJetDay(true)),
+      isGridView = false
+    )
+  }
 }
 
 @Composable

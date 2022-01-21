@@ -179,7 +179,7 @@ private fun YearHeader(
   index: Int
 ) {
   Text(
-    text = pagedMonths[index]!!.year(),
+    text = pagedMonths[index].year(),
     modifier = Modifier.padding(8.dp),
     style = TextStyle(
       color = Color.Red,
