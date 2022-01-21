@@ -1,8 +1,5 @@
 package dev.baseio.libjetcalendar.data
 
-import android.os.Parcelable
-import androidx.compose.ui.text.AnnotatedString
-import kotlinx.parcelize.Parcelize
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -12,14 +9,13 @@ import java.time.temporal.WeekFields
 import java.util.*
 
 
-@Parcelize
 class JetMonth private constructor(
   val startDate: LocalDate,
   val endDate: LocalDate,
   var firstDayOfWeek: DayOfWeek,
-  var monthWeeks: List<JetWeek>? = null
-) :
-  Parcelable, JetCalendarType() {
+) : JetCalendarType() {
+  lateinit var monthWeeks: List<JetWeek>
+
   fun name(): String {
     return startDate.month.getDisplayName(
       TextStyle.SHORT,
@@ -28,7 +24,7 @@ class JetMonth private constructor(
   }
 
   fun monthYear(): String {
-    return name()+" "+year()
+    return name() + " " + year()
   }
 
   fun year(): String {
@@ -36,10 +32,13 @@ class JetMonth private constructor(
   }
 
   companion object {
-    fun current(date: LocalDate = LocalDate.now(), firstDayOfWeek: DayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek): JetMonth {
+    fun current(
+      date: LocalDate = LocalDate.now(),
+      firstDayOfWeek: DayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
+    ): JetMonth {
       val startOfMonth = date.with(TemporalAdjusters.firstDayOfMonth())
       val endOfMonth = date.with(TemporalAdjusters.lastDayOfMonth())
-      val month =  JetMonth(startOfMonth, endOfMonth, firstDayOfWeek = firstDayOfWeek)
+      val month = JetMonth(startOfMonth, endOfMonth, firstDayOfWeek = firstDayOfWeek)
       month.monthWeeks = month.weeks(firstDayOfWeek)
       return month
     }
@@ -52,7 +51,6 @@ class JetMonth private constructor(
     monthWeeks.add(
       JetWeek.current(
         startDate,
-        isFirstWeek = true,
         dayOfWeek = this.firstDayOfWeek
       )
     )

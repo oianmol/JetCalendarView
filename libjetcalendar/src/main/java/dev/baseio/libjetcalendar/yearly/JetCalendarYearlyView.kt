@@ -16,32 +16,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.*
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.mutualmobile.praxis.commonui.theme.AlphaNearTransparent
 import com.mutualmobile.praxis.commonui.theme.PraxisTheme
 import dev.baseio.libjetcalendar.data.*
 import dev.baseio.libjetcalendar.monthly.JetCalendarMonthlyView
 import dev.baseio.libjetcalendar.monthly.WeekNames
-import kotlinx.coroutines.flow.Flow
 import java.time.DayOfWeek
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun JetCalendarYearlyView(
+  jetYear: JetYear,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
-  pagingFlow: Flow<PagingData<JetMonth>>,
   isGridView: Boolean = true,
   dayOfWeek: DayOfWeek,
   startIndex: Int = 0
 ) {
-  val lazyPagingMonths = pagingFlow.collectAsLazyPagingItems()
   // affected by https://stackoverflow.com/questions/69739108/how-to-save-paging-state-of-lazycolumn-during-navigation-in-jetpack-compose
   val listState = rememberLazyListState(startIndex)
 
   YearViewInternal(
     listState,
-    lazyPagingMonths,
+    jetYear,
     onDateSelected,
     selectedDates,
     isGridView,
@@ -54,23 +51,21 @@ fun JetCalendarYearlyView(
 @Composable
 private fun YearViewInternal(
   listState: LazyListState,
-  pagedMonths: LazyPagingItems<JetMonth>,
+  jetYear: JetYear,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
   isGridView: Boolean,
   dayOfWeek: DayOfWeek,
 ) {
-  when (pagedMonths.itemCount) {
+  when (jetYear.yearMonths.size) {
     0 -> CircularProgressIndicator(color = Color.Black, modifier = Modifier.padding(8.dp))
     else -> {
       if (isGridView) {
-        GridViewYearly(listState, pagedMonths, onDateSelected, selectedDates, isGridView)
+        GridViewYearly(listState, jetYear.yearMonths, onDateSelected, selectedDates, isGridView)
       } else {
         Column {
-          if (!isGridView) {
-            WeekNames(isGridView, dayOfWeek = dayOfWeek)
-          }
-          ListViewYearly(listState, pagedMonths, onDateSelected, selectedDates, isGridView)
+          WeekNames(isGridView, dayOfWeek = dayOfWeek)
+          ListViewYearly(listState, jetYear.yearMonths, onDateSelected, selectedDates, isGridView)
         }
       }
     }
@@ -82,7 +77,7 @@ private fun YearViewInternal(
 @Composable
 private fun ListViewYearly(
   listState: LazyListState,
-  pagedMonths: LazyPagingItems<JetMonth>,
+  pagedMonths: List<JetMonth>,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
   isGridView: Boolean
@@ -93,7 +88,7 @@ private fun ListViewYearly(
       .fillMaxWidth()
       .fillMaxHeight()
   ) {
-    for (index in 0 until pagedMonths.itemCount) {
+    for (index in pagedMonths.indices) {
       item {
         CalendarMonthlyBox(
           pagedMonths,
@@ -111,7 +106,7 @@ private fun ListViewYearly(
 @Composable
 private fun GridViewYearly(
   listState: LazyListState,
-  pagedMonths: LazyPagingItems<JetMonth>,
+  pagedMonths: List<JetMonth>,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
   isGridView: Boolean,
@@ -123,7 +118,7 @@ private fun GridViewYearly(
       .fillMaxWidth()
       .fillMaxHeight()
   ) {
-    for (index in 0 until pagedMonths.itemCount) {
+    for (index in pagedMonths.indices) {
       when {
         index % 12 == 0 -> {
           item(span = { GridItemSpan(3) }) {
@@ -180,7 +175,7 @@ private fun YearMonthHeader(
 
 @Composable
 private fun YearHeader(
-  pagedMonths: LazyPagingItems<JetMonth>,
+  pagedMonths: List<JetMonth>,
   index: Int
 ) {
   Text(
@@ -196,14 +191,14 @@ private fun YearHeader(
 
 @Composable
 private fun CalendarMonthlyBox(
-  pagedMonths: LazyPagingItems<JetMonth>,
+  pagedMonths: List<JetMonth>,
   index: Int,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
   isGridView: Boolean,
 ) {
   JetCalendarMonthlyView(
-    pagedMonths[index]!!,
+    pagedMonths[index],
     {
       onDateSelected(it)
     },

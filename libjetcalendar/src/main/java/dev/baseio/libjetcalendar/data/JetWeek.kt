@@ -1,7 +1,5 @@
 package dev.baseio.libjetcalendar.data
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -23,27 +21,24 @@ fun dayNames(dayOfWeek: DayOfWeek): List<String> {
   }
 }
 
-@Parcelize
 class JetWeek private constructor(
   val startDate: LocalDate,
   val endDate: LocalDate,
   val monthOfWeek: Int,
   val dayOfWeek: DayOfWeek,
-  val isFirstWeek: Boolean,
-  var days: List<JetDay>? = null
-) : Parcelable, JetCalendarType() {
+) : JetCalendarType() {
+  lateinit var days: List<JetDay>
 
   companion object {
     fun current(
       date: LocalDate = LocalDate.now(),
-      dayOfWeek: DayOfWeek,
-      isFirstWeek: Boolean
+      dayOfWeek: DayOfWeek
     ): JetWeek {
       val startOfCurrentWeek: LocalDate =
         date.with(TemporalAdjusters.previousOrSame(dayOfWeek))
       val lastDayOfWeek = dayOfWeek.plus(6) // or minus(1)
       val endOfWeek: LocalDate = date.with(TemporalAdjusters.nextOrSame(lastDayOfWeek))
-      val week = JetWeek(startOfCurrentWeek, endOfWeek, date.monthValue, dayOfWeek, isFirstWeek)
+      val week = JetWeek(startOfCurrentWeek, endOfWeek, date.monthValue, dayOfWeek)
       week.days = week.dates()
       return week
     }
@@ -75,7 +70,7 @@ private fun JetDay.nextDay(jetWeek: JetWeek): JetDay {
 fun JetWeek.nextWeek(isFirstWeek: Boolean): JetWeek {
   val firstDay = this.endDate.plusDays(1)
   val lastDay = this.endDate.plusDays(7)
-  val week = JetWeek.current(firstDay, dayOfWeek = dayOfWeek, isFirstWeek = isFirstWeek)
+  val week = JetWeek.current(firstDay, dayOfWeek = dayOfWeek)
   week.days = week.dates()
   return week
 }

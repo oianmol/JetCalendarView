@@ -1,6 +1,7 @@
 package dev.baseio.libjetcalendar.data
 
 import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -10,15 +11,18 @@ import java.time.temporal.WeekFields
 import java.util.*
 
 
-@Parcelize
 class JetYear private constructor(
   val startDate: LocalDate,
   val endDate: LocalDate,
-  var yearMonths: List<JetMonth>? = null
-) : Parcelable, JetCalendarType() {
+) : JetCalendarType() {
+  @IgnoredOnParcel
+  lateinit var yearMonths: List<JetMonth>
 
   companion object {
-    fun current(date: LocalDate = LocalDate.now(), firstDayOfWeek: DayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek): JetYear {
+    fun current(
+      date: LocalDate = LocalDate.now(),
+      firstDayOfWeek: DayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
+    ): JetYear {
       val day: LocalDate = date.with(TemporalAdjusters.firstDayOfYear())
       val last: LocalDate = date.with(TemporalAdjusters.lastDayOfYear())
       val year = JetYear(day, last)

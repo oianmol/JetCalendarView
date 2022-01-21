@@ -21,7 +21,7 @@ import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
 
 @Composable
-fun CalendarYearView(VM: CalendarYearVM = hiltViewModel()) {
+fun CalendarYearView(viewModel: CalendarYearVM = hiltViewModel()) {
   Scaffold(
     backgroundColor = PraxisTheme.colors.uiBackground,
     contentColor = PraxisTheme.colors.textSecondary,
@@ -53,12 +53,11 @@ fun CalendarYearView(VM: CalendarYearVM = hiltViewModel()) {
     }) {
     JetCalendarYearlyView(
       onDateSelected = {
-        val startOfMonth = it.date.with(TemporalAdjusters.firstDayOfMonth())
-        updateViewForViewType(VM, startOfMonth.toJetDay(true))
+        updateViewForViewType(viewModel, it)
       },
       selectedDates = setOf(JetDay(LocalDate.now(), isPartOfMonth = true)),
-      pagingFlow = VM.lazyPagingMonths,
-      dayOfWeek =  VM.firstDayOfWeek
+      jetYear = viewModel.year,
+      dayOfWeek =  viewModel.firstDayOfWeek
     )
   }
 
@@ -66,9 +65,9 @@ fun CalendarYearView(VM: CalendarYearVM = hiltViewModel()) {
 }
 
 private fun updateViewForViewType(
-  VM: CalendarYearVM,
-  it: JetDay
+  calendarYearVM: CalendarYearVM,
+  jetDay: JetDay
 ) {
-  VM.selectedDate = it
-  VM.navigateMonth()
+  calendarYearVM.selectedDate = jetDay
+  calendarYearVM.navigateMonth()
 }

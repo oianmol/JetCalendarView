@@ -32,11 +32,6 @@ class CalendarMonthVM @Inject constructor(
   val firstDayOfWeek: DayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
   val year = JetYear.current(selectedDate, firstDayOfWeek)
 
-  private val monthsPager = Pager(PagingConfig(12, initialLoadSize = 3)) {
-    JetPagingSource(selectedDate, firstDayOfWeek)
-  }
-  val lazyPagingMonths = monthsPager.flow
-
   fun navBack() {
     navigator.navigateUp()
   }

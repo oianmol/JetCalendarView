@@ -17,6 +17,7 @@ import com.google.accompanist.insets.statusBarsPadding
 import com.mutualmobile.praxis.commonui.material.CommonTopAppBar
 import com.mutualmobile.praxis.commonui.theme.PraxisTheme
 import dev.baseio.libjetcalendar.data.JetDay
+import dev.baseio.libjetcalendar.data.toJetDay
 import dev.baseio.libjetcalendar.yearly.JetCalendarYearlyView
 import java.time.LocalDate
 
@@ -60,10 +61,11 @@ private fun MainContent(viewModel: CalendarMonthVM) {
     onDateSelected = {
 
     },
-    selectedDates = setOf(JetDay(LocalDate.now(), isPartOfMonth = true)),
-    pagingFlow = viewModel.lazyPagingMonths,
+    selectedDates = setOf(viewModel.selectedDate.toJetDay(true)),
+    jetYear = viewModel.year,
     isGridView = false,
     dayOfWeek = viewModel.firstDayOfWeek,
+    startIndex = viewModel.selectedDate.monthValue.minus(1)
   )
 }
 
