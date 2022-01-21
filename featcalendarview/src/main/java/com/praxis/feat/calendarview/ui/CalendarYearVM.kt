@@ -50,4 +50,13 @@ class CalendarYearVM @Inject constructor(private val navigator: Navigator) : Vie
     gridListSwitch.value = !gridListSwitch.value
   }
 
+  fun nextYear() {
+    yearState.value?.endDate?.plusDays(1)?.let { setYear(it) }
+
+  }
+
+  fun previousYear() {
+    yearState.value?.startDate?.minusDays(1)?.let { setYear(it) }
+  }
+
 }

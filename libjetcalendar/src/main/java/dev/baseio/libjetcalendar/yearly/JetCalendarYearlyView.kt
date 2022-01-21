@@ -5,8 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -14,7 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.paging.*
 import androidx.paging.compose.LazyPagingItems
 import com.mutualmobile.praxis.commonui.theme.AlphaNearTransparent
 import com.mutualmobile.praxis.commonui.theme.PraxisTheme
@@ -31,7 +36,10 @@ fun JetCalendarYearlyView(
   selectedDates: Set<JetDay>,
   isGridView: Boolean = true,
   dayOfWeek: DayOfWeek,
-  startIndex: Int = 0
+  startIndex: Int = 0,
+  needsYearNavigator: Boolean = false,
+  onPreviousYear: () -> Unit = {},
+  onNextYear: () -> Unit = {}
 ) {
   // affected by https://stackoverflow.com/questions/69739108/how-to-save-paging-state-of-lazycolumn-during-navigation-in-jetpack-compose
   val listState = rememberLazyListState(startIndex)
@@ -42,7 +50,7 @@ fun JetCalendarYearlyView(
     onDateSelected,
     selectedDates,
     isGridView,
-    dayOfWeek = dayOfWeek
+    dayOfWeek = dayOfWeek, needsYearNavigator, onPreviousYear, onNextYear
   )
 }
 
@@ -56,16 +64,34 @@ private fun YearViewInternal(
   selectedDates: Set<JetDay>,
   isGridView: Boolean,
   dayOfWeek: DayOfWeek,
+  needsYearNavigator: Boolean,
+  onPreviousYear: () -> Unit,
+  onNextYear: () -> Unit,
 ) {
   when (jetYear.yearMonths.size) {
     0 -> CircularProgressIndicator(color = Color.Black, modifier = Modifier.padding(8.dp))
     else -> {
       if (isGridView) {
-        GridViewYearly(listState, jetYear.yearMonths, onDateSelected, selectedDates, isGridView)
+        GridViewYearly(
+          listState,
+          jetYear.yearMonths,
+          onDateSelected,
+          selectedDates,
+          isGridView,
+          needsYearNavigator,
+          onPreviousYear,
+          onNextYear
+        )
       } else {
         Column {
+          YearNavigatorHeader(jetYear.year(), onPreviousYear, onNextYear)
           WeekNames(isGridView, dayOfWeek = dayOfWeek)
-          ListViewYearly(listState, jetYear.yearMonths, onDateSelected, selectedDates, isGridView)
+          ListViewYearly(
+            listState, jetYear.yearMonths, onDateSelected, selectedDates, isGridView,
+            needsYearNavigator,
+            onPreviousYear,
+            onNextYear
+          )
         }
       }
     }
@@ -80,7 +106,10 @@ private fun ListViewYearly(
   pagedMonths: List<JetMonth>,
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
-  isGridView: Boolean
+  isGridView: Boolean,
+  needsYearNavigator: Boolean,
+  onPreviousYear: () -> Unit,
+  onNextYear: () -> Unit
 ) {
   LazyColumn(
     state = listState,
@@ -110,6 +139,9 @@ private fun GridViewYearly(
   onDateSelected: (JetDay) -> Unit,
   selectedDates: Set<JetDay>,
   isGridView: Boolean,
+  needsYearNavigator: Boolean,
+  onPreviousYear: () -> Unit,
+  onNextYear: () -> Unit,
 ) {
   LazyVerticalGrid(
     cells = GridCells.Fixed(3),
@@ -122,7 +154,11 @@ private fun GridViewYearly(
       when {
         index % 12 == 0 -> {
           item(span = { GridItemSpan(3) }) {
-            YearHeader(pagedMonths, index)
+            if (needsYearNavigator) {
+              YearNavigatorHeader(pagedMonths[index].year(), onPreviousYear, onNextYear)
+            } else {
+              YearHeader(pagedMonths[index].year())
+            }
           }
           item {
             CalendarMonthlyBox(
@@ -146,6 +182,33 @@ private fun GridViewYearly(
           }
         }
       }
+    }
+  }
+}
+
+@Composable
+fun YearNavigatorHeader(year: String, onPreviousYear: () -> Unit, onNextYear: () -> Unit) {
+  Row(
+    horizontalArrangement = Arrangement.SpaceBetween,
+    modifier = Modifier.fillMaxWidth(),
+    verticalAlignment = Alignment.CenterVertically
+  ) {
+    IconButton(onClick = {
+      onPreviousYear()
+    }) {
+      Icon(
+        Icons.Filled.ArrowBack, "Previous Year",
+        tint = Color.Red
+      )
+    }
+    YearHeader(year)
+    IconButton(onClick = {
+      onNextYear()
+    }) {
+      Icon(
+        Icons.Filled.ArrowForward, "Next Year",
+        tint = Color.Red
+      )
     }
   }
 }
@@ -175,11 +238,10 @@ private fun YearMonthHeader(
 
 @Composable
 private fun YearHeader(
-  pagedMonths: List<JetMonth>,
-  index: Int
+  year: String
 ) {
   Text(
-    text = pagedMonths[index].year(),
+    text = year,
     modifier = Modifier.padding(8.dp),
     style = TextStyle(
       color = Color.Red,

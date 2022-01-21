@@ -50,4 +50,8 @@ class JetYear private constructor(
     }
     return months
   }
+
+  fun year(): String {
+    return this.startDate.year.toString()
+  }
 }

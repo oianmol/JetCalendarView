@@ -47,7 +47,14 @@ fun CalendarYearView(viewModel: CalendarYearVM = hiltViewModel()) {
         selectedDates = setOf(JetDay(LocalDate.now(), isPartOfMonth = true)),
         jetYear = jetYear,
         dayOfWeek = viewModel.firstDayOfWeek,
-        isGridView = viewType
+        isGridView = viewType,
+        onNextYear = {
+          viewModel.nextYear()
+        },
+        onPreviousYear = {
+          viewModel.previousYear()
+        },
+        needsYearNavigator = true
       )
     }
 
