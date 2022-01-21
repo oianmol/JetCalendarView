@@ -17,7 +17,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mutualmobile.praxis.commonui.theme.PraxisTheme
 import dev.baseio.libjetcalendar.data.JetDay
 import dev.baseio.libjetcalendar.data.JetWeek
 
@@ -66,4 +65,4 @@ fun JetCalendarWeekView(
 private fun bgColor(
   selectedDates: Set<JetDay>,
   date: JetDay
-) = if (selectedDates.contains(date)) Color.Red else PraxisTheme.colors.uiBackground
+) = if (selectedDates.contains(date)) Color.Red else Color.Transparent

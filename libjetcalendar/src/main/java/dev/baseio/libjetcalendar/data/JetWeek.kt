@@ -67,9 +67,8 @@ private fun JetDay.nextDay(jetWeek: JetWeek): JetDay {
   return JetDay(date, isPartOfMonth)
 }
 
-fun JetWeek.nextWeek(isFirstWeek: Boolean): JetWeek {
+fun JetWeek.nextWeek(): JetWeek {
   val firstDay = this.endDate.plusDays(1)
-  val lastDay = this.endDate.plusDays(7)
   val week = JetWeek.current(firstDay, dayOfWeek = dayOfWeek)
   week.days = week.dates()
   return week

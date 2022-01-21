@@ -17,12 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.paging.compose.LazyPagingItems
-import com.mutualmobile.praxis.commonui.theme.AlphaNearTransparent
-import com.mutualmobile.praxis.commonui.theme.PraxisTheme
 import dev.baseio.libjetcalendar.data.*
 import dev.baseio.libjetcalendar.monthly.JetCalendarMonthlyView
 import dev.baseio.libjetcalendar.monthly.WeekNames
@@ -210,29 +206,6 @@ fun YearNavigatorHeader(year: String, onPreviousYear: () -> Unit, onNextYear: ()
         tint = Color.Red
       )
     }
-  }
-}
-
-@Composable
-private fun YearMonthHeader(
-  pagedMonths: LazyPagingItems<JetMonth>,
-  index: Int
-) {
-  Box(
-    modifier = Modifier
-      .fillMaxWidth()
-      .background(color = Color.White.copy(alpha = AlphaNearTransparent))
-  ) {
-    Text(
-      text = pagedMonths[index]!!.monthYear(),
-      modifier = Modifier.padding(8.dp),
-      textAlign = TextAlign.Center,
-      style = TextStyle(
-        color = PraxisTheme.colors.textPrimary,
-        fontSize = 16.sp,
-        fontWeight = FontWeight.SemiBold
-      ),
-    )
   }
 }
 

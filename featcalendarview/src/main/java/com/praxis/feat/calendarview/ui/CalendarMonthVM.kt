@@ -3,15 +3,10 @@ package com.praxis.feat.calendarview.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import com.mutualmobile.praxis.navigator.Navigator
 import com.mutualmobile.praxis.navigator.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.baseio.libjetcalendar.data.JetDay
 import dev.baseio.libjetcalendar.data.JetMonth
-import dev.baseio.libjetcalendar.data.JetPagingSource
-import dev.baseio.libjetcalendar.data.JetYear
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch

@@ -232,7 +232,7 @@ private val LocalPraxisColor = staticCompositionLocalOf<PraxisColorPalette> {
  */
 fun debugColors(
   darkTheme: Boolean,
-  debugColor: Color = Color.Red
+  debugColor: Color = GreyBg
 ) = Colors(
   primary = debugColor,
   primaryVariant = debugColor,

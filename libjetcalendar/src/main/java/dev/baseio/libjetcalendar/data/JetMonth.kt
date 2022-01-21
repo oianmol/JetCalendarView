@@ -55,7 +55,7 @@ class JetMonth private constructor(
       )
     )
     while (monthWeeks.size != weeks) {
-      monthWeeks.add(monthWeeks.last().nextWeek(isFirstWeek = false))
+      monthWeeks.add(monthWeeks.last().nextWeek())
     }
     return monthWeeks
   }

@@ -2,9 +2,6 @@ plugins {
     id(BuildPlugins.ANDROID_LIBRARY_PLUGIN)
     id(BuildPlugins.KOTLIN_ANDROID_PLUGIN)
     id(BuildPlugins.KOTLIN_KAPT)
-    id(BuildPlugins.DAGGER_HILT)
-    id(BuildPlugins.KOTLIN_PARCELABLE_PLUGIN)
-    id("org.jlleitschuh.gradle.ktlint")
 }
 
 android {
@@ -15,14 +12,6 @@ android {
         targetSdk = (ProjectProperties.TARGET_SDK)
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
-
 
     buildFeatures {
         compose = true
@@ -58,19 +47,10 @@ kapt {
 
 dependencies {
     /*Kotlin*/
-    implementation(project(":data"))
-    implementation(project(":domain"))
-    implementation(project(":common"))
-    implementation(project(":navigator"))
-    implementation(project(":commonui"))
-
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 
     api(Lib.Android.COMPOSE_UI)
-    api(Lib.Android.COIL_COMPOSE)
-    api(Lib.Android.COMPOSE_PAGING)
     api(Lib.Android.COMPOSE_MATERIAL)
-    api(Lib.Android.COMPOSE_UI)
     api(Lib.Android.COMPOSE_TOOLING)
     debugApi(Lib.Android.DEBUG_TOOLING)
     api(Lib.Android.ACT_COMPOSE)
@@ -78,29 +58,5 @@ dependencies {
 
     api(Lib.Android.appCompat)
     api(Lib.Kotlin.KTX_CORE)
-
-
-    /*DI*/
-    api(Lib.Di.hilt)
-    api(Lib.Di.hiltNavigationCompose)
-    api(Lib.Di.viewmodel)
-
-    kapt(Lib.Di.hiltCompiler)
-    kapt(Lib.Di.hiltAndroidCompiler)
-
-    /* Logger */
-    api(Lib.Logger.TIMBER)
-    /* Async */
-    api(Lib.Async.COROUTINES)
-    api(Lib.Async.COROUTINES_ANDROID)
-    /*Testing*/
-    testImplementation(TestLib.JUNIT)
-    testImplementation(TestLib.CORE_TEST)
-    testImplementation(TestLib.ANDROID_JUNIT)
-    testImplementation(TestLib.ARCH_CORE)
-    testImplementation(TestLib.MOCK_WEB_SERVER)
-    testImplementation(TestLib.ROBO_ELECTRIC)
-    testImplementation(TestLib.COROUTINES)
-    testImplementation(TestLib.MOCKK)
 
 }
